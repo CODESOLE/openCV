@@ -150,8 +150,8 @@ void demos(case_id demo_id = case_id::READ_IMAGE)
         break;
     }
     case case_id::OBJECT_DETECTION: {
-        cv::Mat image_cpy = cv::imread("/home/caner/Downloads/2_kopya.png");
-        cv::Mat image = cv::imread("/home/caner/Downloads/2.jpg");
+        cv::Mat image_cpy = cv::imread("./2_new4.png");
+        cv::Mat image = cv::imread("./2.png");
 
         // Check for failure
         if (image.empty())
@@ -161,13 +161,8 @@ void demos(case_id demo_id = case_id::READ_IMAGE)
             return exit(EXIT_SUCCESS);
         }
 
-        cv::namedWindow("Control",
-                        cv::WINDOW_NORMAL); // create a window called "Control"
-
-        cv::namedWindow("Thresholded Image",
-                        cv::WINDOW_NORMAL); // show the thresholded image
-        cv::namedWindow("Thresholded Image Copy",
-                        cv::WINDOW_NORMAL); // show the original image
+        cv::namedWindow("Thresholded Image", cv::WINDOW_NORMAL);      // show the thresholded image
+        cv::namedWindow("Thresholded Image Copy", cv::WINDOW_NORMAL); // show the original image
 
         int iLowH = 11;
         int iHighH = 33;
@@ -182,8 +177,7 @@ void demos(case_id demo_id = case_id::READ_IMAGE)
         cv::createTrackbar("LowH", "Control", &iLowH, 179); // Hue (0 - 179)
         cv::createTrackbar("HighH", "Control", &iHighH, 179);
 
-        cv::createTrackbar("LowS", "Control", &iLowS,
-                           255); // Saturation (0 - 255)
+        cv::createTrackbar("LowS", "Control", &iLowS, 255); // Saturation (0 - 255)
         cv::createTrackbar("HighS", "Control", &iHighS, 255);
 
         cv::createTrackbar("LowV", "Control", &iLowV, 255); // Value (0 - 255)
@@ -197,9 +191,7 @@ void demos(case_id demo_id = case_id::READ_IMAGE)
                          cv::COLOR_BGR2HSV); // Convert the captured frame
                                              // from BGR to HSV
 
-            cv::cvtColor(image, imgHSV,
-                         cv::COLOR_BGR2HSV); // Convert the captured frame
-                                             // from BGR to HSV
+            cv::cvtColor(image, imgHSV, cv::COLOR_BGR2HSV); // Convert the captured frame from BGR to HSV
 
             cv::Mat imgThresholded, imgThresholded_cpy;
 
@@ -233,43 +225,23 @@ void demos(case_id demo_id = case_id::READ_IMAGE)
 
             cv::erode(imgThresholded, imgThresholded, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
             //----------------------------------------------------------------------------------------------------------------------------------------------
-            cv::imshow("Thresholded Image",
-                       imgThresholded);                               // show the thresholded image
+            cv::imshow("Thresholded Image", imgThresholded);          // show the thresholded image
             cv::imshow("Thresholded Image Copy", imgThresholded_cpy); // show the original image
 
-            // cv::Mat img_result;
-            // cv::compare(imgThresholded_cpy, imgThresholded, img_result, cv::CMP_EQ);
-
-            // uint8_t *pixelPtr = (uint8_t *)img_result.data;
-            // int cn = img_result.channels();
-            // cv::Scalar_<uint8_t> bgrPixel;
+            cv::Mat img_result = image;
+            cv::cvtColor(img_result, img_result, cv::COLOR_BGR2GRAY); // Convert the captured frame from BGR to HSV
 
             for (int i = 0; i < imgThresholded.rows; i++)
             {
                 for (int j = 0; j < imgThresholded.cols; j++)
                 {
-                    std::cout << (int)imgThresholded.at<uint8_t>(i, j) << "  ";
+                    if ((int)imgThresholded.at<uint8_t>(i, j) == (int)imgThresholded_cpy.at<uint8_t>(i, j))
+                        img_result.at<uint8_t>(i, j) = 0;
+                    else
+                        img_result.at<uint8_t>(i, j) = 255;
                 }
-                std::cout << std::endl;
-                std::cout << "<------------------------ROW END------------------------------->" << std::endl;
             }
-            std::cout << imgThresholded.size().height << ", " << imgThresholded.size().width << std::endl;
-            goto EXIT;
-
-            // for (int i = 0; i < img_result.rows; i++)
-            // {
-            //     for (int j = 0; j < img_result.cols; j++)
-            //     {
-            //         if((int)img_result.at<uint8_t> (i, j) != 255){
-            //             std::cout << "Images are not same!" << std::endl;
-            //             goto EXIT;
-            //         }
-            //     }
-            // }
-
-            // for (size_t i = 0; i < img_result.size().width * img_result.size().height; ++i)
-            // {
-            // }
+            cv::imshow("result image", img_result);
 
             if (cv::waitKey(30) == 27) // wait for 'esc' key press for 30ms.
             {
@@ -277,10 +249,9 @@ void demos(case_id demo_id = case_id::READ_IMAGE)
                 break;
             }
         }
-    EXIT:
-        cv::destroyWindow("Control");                // destroy the created window
+        // EXIT:
         cv::destroyWindow("Thresholded Image Copy"); // destroy the created window
-        cv::destroyWindow("Thresholded Image");      // destroy the created window
+        cv::destroyWindow("Thresholded Image");      // destroy the created
         break;
     }
     case case_id::READ_IMAGE: {
