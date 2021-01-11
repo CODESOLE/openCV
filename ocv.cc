@@ -11,7 +11,7 @@
 #include <opencv2/videoio.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 
-void demos()
+void run()
 {
     cv::Mat image_reference = cv::imread("reference_image.png");
     cv::Mat image_changed = cv::imread("reference_image.png");
@@ -168,6 +168,6 @@ void demos()
 
 int main(int argc, char** argv)
 {
-    demos();
+    run();
     return 0;
 }
