@@ -13,8 +13,8 @@
 
 void demos()
 {
-    cv::Mat image_reference = cv::imread("2.png");
-    cv::Mat image_changed = cv::imread("2.png");
+    cv::Mat image_reference = cv::imread("reference_image.png");
+    cv::Mat image_changed = cv::imread("variable_image.png");
 
     if (image_reference.empty())
     {
@@ -144,7 +144,7 @@ void demos()
             cv::putText(warn_text, cv::String("NO OBJECT DETECTED"), cv::Point2i(30, 110), cv::FONT_HERSHEY_SIMPLEX, .5f, cv::Scalar(0, 255, 0));
             cv::putText(warn_text, cv::String("IN THE YELLOW LINE"), cv::Point2i(30, 130), cv::FONT_HERSHEY_SIMPLEX, .5f, cv::Scalar(0, 255, 0));
             cv::imshow("Warning Window", warn_text);
-
+            cv::destroyWindow("Result Image");
         }
 
 
