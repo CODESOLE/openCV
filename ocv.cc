@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include <iostream>
 #include <iterator>
 #include <opencv2/core.hpp>
@@ -14,29 +13,36 @@
 
 void demos()
 {
-    cv::Mat image_cpy = cv::imread("D:/OPENCV/Photos/2.png");
-    cv::Mat image = cv::imread("D:/OPENCV/Photos/2.png");
+    cv::Mat image_reference = cv::imread("2.png");
+    cv::Mat image_changed = cv::imread("2.png");
 
-    // Check for failure
-    if (image.empty())
+    if (image_reference.empty())
     {
-        std::cout << "Could not open or find the image" << std::endl;
-        std::cin.get(); // wait for any key press
+        std::cout << "Could not open or find the image 1" << std::endl;
+        std::cin.get(); 
         return exit(EXIT_SUCCESS);
     }
 
-    cv::namedWindow("Thresholded Image", cv::WINDOW_NORMAL);      // show the thresholded image
-    cv::namedWindow("Thresholded Image Copy", cv::WINDOW_NORMAL); // show the original image
+    if (image_changed.empty())
+    {
+        std::cout << "Could not open or find the image 2" << std::endl;
+        std::cin.get(); 
+        return exit(EXIT_SUCCESS);
+    }
+
+    cv::namedWindow("Thresholded Image Reference", cv::WINDOW_NORMAL); 
+    cv::namedWindow("Thresholded Image Changed", cv::WINDOW_NORMAL); 
+
     cv::namedWindow("Warning Window", cv::WINDOW_NORMAL);
 
-    int iLowH = 11;
-    int iHighH = 33;
+    const int iLowH = 11;
+    const int iHighH = 33;
 
-    int iLowS = 14;
-    int iHighS = 255;
+    const int iLowS = 14;
+    const int iHighS = 255;
 
-    int iLowV = 4;
-    int iHighV = 255;
+    const int iLowV = 4;
+    const int iHighV = 255;
 #if 0
     // Create trackbars in "Control" window
     cv::createTrackbar("LowH", "Control", &iLowH, 179); // Hue (0 - 179)
@@ -50,62 +56,63 @@ void demos()
 #endif
     while (true)
     {
-        char c;
-        
-        if((c = std::getchar()) == 'x')
-            image = cv::imread("2_new4.png");
-        if ((c = std::getchar()) == 'y')
-            image = cv::imread("2_new5.png");
-
-        cv::Mat imgHSV, imgHSV_cpy;
-
-        cv::cvtColor(image_cpy, imgHSV_cpy,
-            cv::COLOR_BGR2HSV); // Convert the captured frame
-                                // from BGR to HSV
-
-        cv::cvtColor(image, imgHSV, cv::COLOR_BGR2HSV); // Convert the captured frame from BGR to HSV
-
-        cv::Mat imgThresholded, imgThresholded_cpy;
-
-        cv::inRange(imgHSV_cpy, cv::Scalar(iLowH, iLowS, iLowV), cv::Scalar(iHighH, iHighS, iHighV),
-            imgThresholded_cpy); // Threshold the image
-
-        // morphological opening (remove small objects from the foreground)
-        cv::erode(imgThresholded_cpy, imgThresholded_cpy, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
-
-        cv::dilate(imgThresholded_cpy, imgThresholded_cpy,
-            cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
-
-        // morphological closing (fill small holes in the foreground)
-        cv::dilate(imgThresholded_cpy, imgThresholded_cpy,
-            cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
-
-        cv::erode(imgThresholded_cpy, imgThresholded_cpy, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
-        //----------------------------------------------------------------------------------------------------------------------------------------------
-        cv::inRange(imgHSV, cv::Scalar(iLowH, iLowS, iLowV), cv::Scalar(iHighH, iHighS, iHighV),
-            imgThresholded); // Threshold the image
-
-        // morphological opening (remove small objects from the foreground)
-        cv::erode(imgThresholded, imgThresholded, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
-
-        cv::dilate(imgThresholded, imgThresholded, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
-
-        // morphological closing (fill small holes in the foreground)
-        cv::dilate(imgThresholded, imgThresholded, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
-
-        cv::erode(imgThresholded, imgThresholded, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
-        //----------------------------------------------------------------------------------------------------------------------------------------------
-        cv::imshow("Thresholded Image", imgThresholded);          // show the thresholded image
-        cv::imshow("Thresholded Image Copy", imgThresholded_cpy); // show the original image
-
-        cv::Mat img_result = image;
-        cv::cvtColor(img_result, img_result, cv::COLOR_BGR2GRAY); // Convert the captured frame from BGR to HSV
-
-        for (int i = 0; i < imgThresholded.rows; i++)
+        switch (std::getchar())
         {
-            for (int j = 0; j < imgThresholded.cols; j++)
+        case 'x':
+            image_changed = cv::imread("2_new4.png");
+            break;
+        case 'y':
+            image_changed = cv::imread("2_new5.png");
+            break;
+        
+        default:
+            image_changed = cv::imread("2.png");
+            break;
+        }
+
+        // if((c = std::getchar()) == 'x')
+        //     image_changed = cv::imread("2_new4.png");
+        // else if ((c = std::getchar()) == 'y')
+        //     image_changed = cv::imread("2_new5.png");
+
+        cv::Mat imgHSV_changed, imgHSV_reference;
+
+        cv::cvtColor(image_reference, imgHSV_reference, cv::COLOR_BGR2HSV);                                 
+        cv::cvtColor(image_changed, imgHSV_changed, cv::COLOR_BGR2HSV); 
+
+        cv::Mat imgThresholded_changed, imgThresholded_reference;
+
+        cv::inRange(imgHSV_reference, cv::Scalar(iLowH, iLowS, iLowV), cv::Scalar(iHighH, iHighS, iHighV), imgThresholded_reference); 
+
+        // morphological opening (remove small objects from the foreground)
+        cv::erode(imgThresholded_reference, imgThresholded_reference, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+        cv::dilate(imgThresholded_reference, imgThresholded_reference, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+
+        // morphological closing (fill small holes in the foreground)
+        cv::dilate(imgThresholded_reference, imgThresholded_reference, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+        cv::erode(imgThresholded_reference, imgThresholded_reference, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+        //----------------------------------------------------------------------------------------------------------------------------------------------
+        cv::inRange(imgHSV_changed, cv::Scalar(iLowH, iLowS, iLowV), cv::Scalar(iHighH, iHighS, iHighV), imgThresholded_changed); // Threshold the image
+
+        // morphological opening (remove small objects from the foreground)
+        cv::erode(imgThresholded_changed, imgThresholded_changed, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+        cv::dilate(imgThresholded_changed, imgThresholded_changed, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+
+        // morphological closing (fill small holes in the foreground)
+        cv::dilate(imgThresholded_changed, imgThresholded_changed, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+        cv::erode(imgThresholded_changed, imgThresholded_changed, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+        //----------------------------------------------------------------------------------------------------------------------------------------------
+        cv::imshow("Thresholded Image Changed", imgThresholded_changed);          
+        cv::imshow("Thresholded Image Reference", imgThresholded_reference); 
+
+        cv::Mat img_result = image_changed;
+        cv::cvtColor(img_result, img_result, cv::COLOR_BGR2GRAY); 
+
+        for (int i = 0; i < imgThresholded_changed.rows; i++)
+        {
+            for (int j = 0; j < imgThresholded_changed.cols; j++)
             {
-                if ((int)imgThresholded.at<uint8_t>(i, j) == (int)imgThresholded_cpy.at<uint8_t>(i, j))
+                if ((int)imgThresholded_changed.at<uint8_t>(i, j) == (int)imgThresholded_reference.at<uint8_t>(i, j))
                     img_result.at<uint8_t>(i, j) = 0;
                 else
                     img_result.at<uint8_t>(i, j) = 255;
@@ -115,11 +122,11 @@ void demos()
 
         bool isdifferent = false;
 
-        for (int i = 0; i < imgThresholded.rows; i++)
+        for (int i = 0; i < imgThresholded_changed.rows; i++)
         {
-            for (int j = 0; j < imgThresholded.cols; j++)
+            for (int j = 0; j < imgThresholded_changed.cols; j++)
             {
-                if ((int)imgThresholded.at<uint8_t>(i, j) != (int)imgThresholded_cpy.at<uint8_t>(i, j))
+                if ((int)imgThresholded_changed.at<uint8_t>(i, j) != (int)imgThresholded_reference.at<uint8_t>(i, j))
                 {
                     isdifferent = true;
                     goto warn_condtion;
@@ -146,18 +153,16 @@ void demos()
         }
 
 
-        if (cv::waitKey(30) == 27) // wait for 'esc' key press for 30ms.
+        if (cv::waitKey(30) == 27) 
         {
             std::cout << "esc key is pressed by user" << std::endl;
             break;
         }
     }
 
-
-    // EXIT:
-    cv::destroyWindow("Thresholded Image Copy"); // destroy the created window
-    cv::destroyWindow("Thresholded Image");      // destroy the created
-    cv::destroyWindow("Warning Window");      // destroy the created
+    cv::destroyWindow("Thresholded Image Reference"); 
+    cv::destroyWindow("Thresholded Image Changed");
+    cv::destroyWindow("Warning Window");
 }
 
 
@@ -167,4 +172,3 @@ int main(int argc, char** argv)
     demos();
     return 0;
 }
-
