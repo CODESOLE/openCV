@@ -70,11 +70,6 @@ void demos()
             break;
         }
 
-        // if((c = std::getchar()) == 'x')
-        //     image_changed = cv::imread("2_new4.png");
-        // else if ((c = std::getchar()) == 'y')
-        //     image_changed = cv::imread("2_new5.png");
-
         cv::Mat imgHSV_changed, imgHSV_reference;
 
         cv::cvtColor(image_reference, imgHSV_reference, cv::COLOR_BGR2HSV);                                 
