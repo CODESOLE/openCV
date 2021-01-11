@@ -59,14 +59,14 @@ void demos()
         switch (std::getchar())
         {
         case 'x':
-            image_changed = cv::imread("2_new4.png");
+            image_changed = cv::imread("state1.png");
             break;
         case 'y':
-            image_changed = cv::imread("2_new5.png");
+            image_changed = cv::imread("state2.png");
             break;
         
         default:
-            image_changed = cv::imread("2.png");
+            image_changed = cv::imread("reference_image.png");
             break;
         }
 
