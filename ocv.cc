@@ -14,7 +14,7 @@
 void demos()
 {
     cv::Mat image_reference = cv::imread("reference_image.png");
-    cv::Mat image_changed = cv::imread("variable_image.png");
+    cv::Mat image_changed = cv::imread("reference_image.png");
 
     if (image_reference.empty())
     {
