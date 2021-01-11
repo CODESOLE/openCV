@@ -18,14 +18,14 @@ void demos()
 
     if (image_reference.empty())
     {
-        std::cout << "Could not open or find the image 1" << std::endl;
+        std::cout << "Could not open or find the image" << std::endl;
         std::cin.get(); 
         return exit(EXIT_SUCCESS);
     }
 
     if (image_changed.empty())
     {
-        std::cout << "Could not open or find the image 2" << std::endl;
+        std::cout << "Could not open or find the image" << std::endl;
         std::cin.get(); 
         return exit(EXIT_SUCCESS);
     }
@@ -58,11 +58,15 @@ void demos()
     {
         switch (std::getchar())
         {
-        case 'x':
-            image_changed = cv::imread("state1.png");
+        case '1':
+            image_changed = cv::imread("warning_1.png");
             break;
-        case 'y':
-            image_changed = cv::imread("state2.png");
+        case '2':
+            image_changed = cv::imread("warning_2.png");
+            break;
+        
+        case '3':
+            image_changed = cv::imread("no_warning_image.png");
             break;
         
         default:
