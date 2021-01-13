@@ -13,3 +13,4 @@ build/
 opencvTest
 .vscode/
 .clangd/index/
+.cache/clangd/index
