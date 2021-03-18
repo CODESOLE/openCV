@@ -13,8 +13,8 @@
 
 void run()
 {
-    cv::Mat image_reference = cv::imread("reference_image.png");
-    cv::Mat image_changed = cv::imread("reference_image.png");
+    cv::Mat image_reference = cv::imread("2.png");
+    cv::Mat image_changed = cv::imread("2.png");
 
     if (image_reference.empty())
     {
@@ -59,18 +59,18 @@ void run()
         switch (std::getchar())
         {
         case '1':
-            image_changed = cv::imread("warning_1.png");
+            image_changed = cv::imread("2_man.png");
             break;
         case '2':
-            image_changed = cv::imread("warning_2.png");
+            image_changed = cv::imread("2_man_2.png");
             break;
         
         case '3':
-            image_changed = cv::imread("no_warning_image.png");
+            image_changed = cv::imread("2_new.png");
             break;
         
         default:
-            image_changed = cv::imread("reference_image.png");
+            image_changed = cv::imread("2.png");
             break;
         }
 
